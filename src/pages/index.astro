@@ -3,14 +3,103 @@
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Portfolio</title>
-	</head>
-	<body>
-		<h1>Radoslav Pavlinchov Portfolio</h1>
-	</body>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>Portfolio</title>
+        <style>
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+                width: 100%;
+                background-color: black;
+                color: white;
+                overflow: hidden;
+                box-sizing: border-box;
+            }
+
+            h1 {
+                margin: 0;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+
+            #container {
+                width: 100vw;
+                height: 90vh;
+                border: 1px solid white;
+                box-sizing: border-box;
+            }
+
+            #dot {
+                background-color: blue;
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Radoslav Pavlinchov Portfolio</h1>
+        <div id="container">
+            <div id="dot"></div>
+        </div>
+
+        <script>
+            import { gsap } from "gsap"
+
+            const dot = document.getElementById("dot")
+            const container = document.getElementById("container")
+
+            let velocityX = 5
+            let velocityY = 4
+
+            function getRandomColor() {
+                return "#" + Math.floor(Math.random() * 16777215).toString(16)
+            }
+
+            function checkBoundsAndReverse() {
+                const dotRect = dot.getBoundingClientRect()
+                const containerRect = container.getBoundingClientRect()
+
+                if (
+                    dotRect.left <= containerRect.left ||
+                    dotRect.right >= containerRect.right
+                ) {
+                    velocityX = -velocityX
+                    gsap.to(dot, {
+                        backgroundColor: getRandomColor(),
+                        duration: 0.2,
+                    })
+                }
+                if (
+                    dotRect.top <= containerRect.top ||
+                    dotRect.bottom >= containerRect.bottom
+                ) {
+                    velocityY = -velocityY
+                    gsap.to(dot, {
+                        backgroundColor: getRandomColor(),
+                        duration: 0.2,
+                    })
+                }
+            }
+
+            function moveDot() {
+                gsap.to(dot, {
+                    x: "+=" + velocityX,
+                    y: "+=" + velocityY,
+                    duration: 0.01,
+                    ease: "none",
+                    onUpdate: checkBoundsAndReverse,
+                    onComplete: moveDot,
+                })
+            }
+
+            moveDot()
+        </script>
+    </body>
 </html>
