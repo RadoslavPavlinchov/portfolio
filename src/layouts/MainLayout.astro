@@ -1,0 +1,43 @@
+---
+// import MainHead from "./MainHead.astro"
+// import Header from "../components/Header.astro"
+// import Footer from "../components/Footer.astro"
+import "../styles/tailwind.css"
+
+// const user = {
+//     name: "Astro User",
+//     age: 2,
+// }
+// const imgList = [
+//     { src: "https://loremflickr.com/320/240", alt: "A kitten" },
+//     { src: "https://loremflickr.com/320/240/dog", alt: "Another kitten" },
+// ]
+
+// const res = await fetch("https://jsonplaceholder.typicode.com/photos?_limit=10")
+// const data = await res.json()
+
+const { title } = Astro.props
+---
+
+<html lang="en" class="w-full h-full sm:scroll-smooth">
+    <!-- <MainHead title={title} /> -->
+
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title}</title>
+    </head>
+
+    <body
+        class="w-full h-full min-h-screen bg-slate-50 text-black dark:bg-black dark:text-white"
+    >
+        <!-- <Header /> -->
+        <main>
+            <!-- class="max-w-6xl mx-auto" -->
+            <slot />
+        </main>
+        <!-- <Footer /> -->
+    </body>
+</html>

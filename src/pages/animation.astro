@@ -1,0 +1,298 @@
+---
+import MainLayout from "../layouts/MainLayout.astro"
+
+const title = "Intro Animation - Triangolos"
+---
+
+<MainLayout title={title}>
+    <section class="h-[300vh] flex flex-col items-center">
+        <h1
+            id="readyText"
+            class="absolute top-1/3 flex flex-col text-9xl items-center opacity-0"
+        >
+            <!-- Initial letters are visible and in position -->
+            <span class="fade-in inline-block">ARE</span>
+            <span class="fade-in inline-block">YOU</span>
+            <span class="fade-in inline-block">IN</span>
+        </h1>
+
+        <div class="flex flex-col items-start justify-center h-[100vh]">
+            <h1 id="animatedText" class="flex flex-row text-9xl">
+                <!-- Initial letters are visible and in position -->
+                <span class="fade-out inline-block">D</span>
+                <span class="fade-out inline-block">A</span>
+                <span class="fade-out inline-block">R</span>
+                <span class="fade-out inline-block">E</span>
+                <span class="fade-out inline-block">&nbsp;</span>
+                <span id="from-0" class="title-from inline-block">T</span>
+                <span id="from-6" class="title-from inline-block">O</span>
+            </h1>
+
+            <h1 class="flex flex-row text-9xl">
+                <span id="from-1" class="title-from inline-block">R</span>
+                <span class="fade-out inline-block">E</span>
+                <span id="from-2" class="title-from inline-block">I</span>
+                <span class="fade-out inline-block">N</span>
+                <span class="fade-out inline-block">V</span>
+                <span class="fade-out inline-block">E</span>
+                <span class="fade-out inline-block">N</span>
+                <span class="fade-out inline-block">T</span>
+            </h1>
+
+            <h1 class="flex flex-row text-9xl">
+                <span class="fade-out inline-block">Y</span>
+                <span id="from-8" class="title-from inline-block">O</span>
+                <span class="fade-out inline-block">U</span>
+                <span class="fade-out inline-block">R</span>
+            </h1>
+
+            <h1 class="flex flex-row text-9xl">
+                <span id="from-5" class="title-from inline-block">G</span>
+                <span id="from-3" class="title-from inline-block">A</span>
+                <span class="fade-out inline-block">R</span>
+                <span class="fade-out inline-block">M</span>
+                <span class="fade-out inline-block">E</span>
+                <span id="from-4" class="title-from inline-block">N</span>
+                <span class="fade-out inline-block">T</span>
+            </h1>
+
+            <h1 class="flex flex-row text-9xl">
+                <span id="from-9" class="title-from inline-block">S</span>
+                <span class="fade-out inline-block">T</span>
+                <span class="fade-out inline-block">Y</span>
+                <span id="from-7" class="title-from inline-block">L</span>
+                <span class="fade-out inline-block">E</span>
+            </h1>
+
+            <!-- GSAP and ScrollTrigger CDN -->
+            <script>
+                // import Lenis from "lenis"
+                // import "lenis/dist/lenis.css"
+                import { gsap } from "gsap"
+                import { ScrollTrigger } from "gsap/ScrollTrigger"
+
+                gsap.registerPlugin(ScrollTrigger)
+
+                // const lenis = new Lenis()
+
+                // lenis.on("scroll", (e) => {
+                //     console.log(e)
+                // })
+
+                // lenis.on("scroll", ScrollTrigger.update)
+
+                // gsap.ticker.add((time) => {
+                //     lenis.raf(time * 1000)
+                // })
+
+                // gsap.ticker.lagSmoothing(0)
+
+                function getPos(fromElement: Element, toElement: Element) {
+                    // if (!fromElement || !toElement) {
+                    //     throw new Error("One of params is undefined or null")
+                    // }
+
+                    const fromRect = fromElement.getBoundingClientRect()
+                    const toRect = toElement.getBoundingClientRect()
+
+                    const toX = toRect.x - fromRect.x
+                    const toY = toRect.y - fromRect.y
+
+                    return {
+                        x: toX,
+                        y: toY,
+                    }
+                }
+
+                const newPositions: {
+                    y: string | number
+                    x: string | number
+                }[] = []
+
+                const titleFromElements =
+                    document.querySelectorAll(".title-from")
+
+                const titleToElements = document.querySelectorAll(".title-to")
+                // for (const letter of titleFromElements) {
+                //     console.log("letter", letter)
+                // }
+
+                titleFromElements.forEach((fromElement, i) => {
+                    const toIndex = Number(fromElement.id.split("-")[1])
+
+                    const toElement = titleToElements[toIndex]
+
+                    newPositions.push(getPos(fromElement, toElement))
+                    // console.log("letter from ", fromElement)
+                    // console.log("letter to ", titleToElements[toIndex])
+                })
+
+                // console.log("titleFromElements", titleFromElements)
+                console.log("newPositions", newPositions)
+
+                const fromElement = document.getElementById("from-0")
+                const toElement = document.getElementById("to-0")
+
+                console.log("fromElement", fromElement)
+
+                if (!fromElement || !toElement) {
+                    throw new Error("One or both elements not found")
+                }
+
+                // const pos = getPos(fromElement, toElement)
+
+                // console.log("pos", pos.x, pos.y)
+
+                document.addEventListener("DOMContentLoaded", () => {
+                    // const newPositions = [
+                    //     { x: pos.x, y: pos.y },
+                    //     // { x: 200, y: 80 },
+                    //     // { x: 240, y: 80 },
+                    //     // { x: 280, y: 80 },
+                    //     // { x: 320, y: 80 },
+                    //     // { x: 160, y: 160 },
+                    //     // { x: 200, y: 160 },
+                    //     // { x: 240, y: 160 },
+                    //     // { x: 280, y: 160 },
+                    //     // { x: 320, y: 160 },
+                    // ]
+                    const tl = gsap.timeline()
+
+                    tl.to(titleFromElements, {
+                        scrollTrigger: {
+                            trigger: titleFromElements,
+                            // toggleActions: "play pause resume none",
+                            start: "bottom 15%",
+                            endTrigger: "#endTrigger",
+                            end: "50% 50%",
+                            scrub: 1,
+                            // pin: true,
+                            markers: true,
+                            once: true,
+                        },
+                        x: (i) => Number(newPositions[i].x),
+                        y: (i) => Number(newPositions[i].y),
+                        onComplete: (self) => {
+                            console.log(self)
+                        },
+                        // duration: 3,
+                        // ease: "power4.out",
+                        // stagger: 0.1,
+                    })
+
+                    tl.to("#brandLogo", {
+                        scrollTrigger: {
+                            trigger: "#brandLogo",
+                            // toggleActions: "play pause resume none",
+                            start: "top 95%",
+                            // endTrigger: "#brandLogo",
+                            end: "+=250",
+                            scrub: 1,
+                            // pin: true,
+                            markers: true,
+                            once: true,
+                        },
+                        opacity: "+=1",
+                        scale: "+=1",
+                        // duration: 3,
+                        // ease: "power4.out",
+                        // stagger: 0.1,
+                    })
+
+                    tl.to("#readyText", {
+                        scrollTrigger: {
+                            trigger: "#brandLogo",
+                            // toggleActions: "play pause resume none",
+                            start: "top bottom",
+                            // endTrigger: "#brandLogo",
+                            end: "+=250",
+                            scrub: true,
+                            // pin: true,
+                            markers: true,
+                            once: true,
+                            onUpdate: () => {
+                                console.log("UPDATE ANIMATION 1")
+                            },
+                        },
+                        opacity: "+=1",
+                        onUpdate: () => {
+                            console.log("UPDATE ANIMATION 2")
+                        },
+                        onComplete: () => {
+                            console.log("COMPLETE ANIMATION 2")
+                        },
+                        // scale: "+=1",
+                        // duration: 3,
+                        // ease: "power4.out",
+                        // stagger: 0.1,
+                    })
+                    //
+
+                    // ScrollTrigger.create({
+                    //     animation: tl,
+                    //     trigger: ".fade-out",
+                    //     start: "top 50%",
+                    //     end: "+=1000",
+                    //     scrub: true,
+                    //     // pin: true,
+                    //     anticipatePin: 1,
+                    // })
+
+                    gsap.to(".fade-out", {
+                        scrollTrigger: {
+                            trigger: ".fade-out",
+                            // toggleActions: "play pause resume none",
+                            start: "top top",
+                            endTrigger: "#endTrigger",
+                            end: "+=780",
+                            scrub: 1,
+                            // pin: true,
+                            markers: true,
+                            once: true,
+                        },
+                        opacity: "-=1",
+                        // scale: "+=1",
+                        // duration: 3,
+                        // ease: "power4.out",
+                        // stagger: 0.1,
+                    })
+                })
+            </script>
+        </div>
+
+        <div
+            id="container"
+            class="h-[100vh] flex flex-row items-center justify-center"
+        >
+            <h1 id="endTrigger" class="text-9xl">
+                <span class="underline block w-full h-1 bg-main-1"></span>
+
+                <span class="opacity-0">
+                    <span id="to-0" class="title-to inline-block">T</span>
+                    <span id="to-1" class="title-to inline-block">R</span>
+                    <span id="to-2" class="title-to inline-block">I</span>
+                    <span id="to-3" class="title-to inline-block">A</span>
+                    <span id="to-4" class="title-to inline-block">N</span>
+                    <span id="to-5" class="title-to inline-block">G</span>
+                    <span id="to-6" class="title-to inline-block">O</span>
+                    <span id="to-7" class="title-to inline-block">L</span>
+                    <span id="to-8" class="title-to inline-block">O</span>
+                    <span id="to-9" class="title-to inline-block">S</span>
+                </span>
+
+                <span class="underline block w-full h-1 mt-4 bg-main-1"></span>
+            </h1>
+        </div>
+
+        <img
+            src="../../heroBrand.png"
+            alt="heroBrand"
+            id="brandLogo"
+            class="relative -top-72 opacity-0 scale-0"
+        />
+
+        <!-- <div class="h-[100vh]">
+            <h1>Other</h1>
+        </div> -->
+    </section>
+</MainLayout>
